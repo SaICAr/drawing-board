@@ -1,0 +1,41 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body,
+html {
+    width: 100%;
+    height: 100%;
+}
+
+#canvas {
+    display: block;
+    background-color: green;
+}
+
+#actions {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+}
+
+#brush {
+    display: none;
+}
+
+.actions.active>#brush {
+    display: inline-block;
+}
+
+.actions.active>#eraser {
+    display: none;
+}
+
+.common {
+    position: absolute;
+    background-color: black;
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+}
