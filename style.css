@@ -1,6 +1,19 @@
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+
 * {
     margin: 0;
     padding: 0;
+}
+
+ul,
+ol {
+    list-style: none;
 }
 
 body,
@@ -9,33 +22,70 @@ html {
     height: 100%;
 }
 
-#canvas {
-    display: block;
-    background-color: green;
+.canvas-list {
+    position: relative;
 }
 
-#actions {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-}
-
-#brush {
-    display: none;
-}
-
-.actions.active>#brush {
-    display: inline-block;
-}
-
-.actions.active>#eraser {
-    display: none;
-}
-
-.common {
+.canvas-list>canvas {
     position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.tools {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 300px;
+    margin: 0 auto;
+    user-select: none;
+}
+
+.tools div {
+    display: inline-block;
+    margin: 15px 10px 0 10px;
+}
+
+.tools svg {
+    width: 50px;
+    height: 50px;
+    transition: all 0.5s ease;
+}
+
+.tool-options {
+    position: fixed;
+    top: 150px;
+    left: 15px;
+}
+
+.tool-options .line-color>li {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin: 20px;
+    transition: all 0.5s ease;
+}
+
+.line-color li:nth-child(1) {
     background-color: black;
-    width: 6px;
-    height: 6px;
-    border-radius: 3px;
+}
+
+.line-color li:nth-child(2) {
+    background-color: lightblue;
+}
+
+.line-color li:nth-child(3) {
+    background-color: lightsalmon;
+}
+
+.line-color li:nth-child(4) {
+    background-color: lightcoral;
+}
+
+.line-color li:nth-child(5) {
+    background-color: lightgreen;
+}
+
+.active {
+    transform: scale(1.3);
 }

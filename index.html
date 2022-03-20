@@ -7,13 +7,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>我的画板</title>
     <link rel="stylesheet" href="./style.css">
+    <script src="//at.alicdn.com/t/font_3262434_5a5ytm3mymi.js"></script>
 </head>
 
 <body>
-    <canvas id="canvas"></canvas>
-    <div class="actions" id="actions">
-        <button id="eraser">橡皮擦</button>
-        <button id="brush">画笔</button>
+    <div class="canvas-list">
+        <canvas id="canvas"></canvas>
+    </div>
+    <div class="tools">
+        <div class="pen">
+            <svg class="icon active" id="pen">
+                <use xlink:href="#icon-pen"></use>
+            </svg>
+        </div>
+        <div class="eraser">
+            <svg class="icon" id="eraser">
+                <use xlink:href="#icon-eraser"></use>
+            </svg>
+        </div>
+        <div class="clear"></div>
+        <div class="save"></div>
+    </div>
+    <div class="tool-options">
+        <div class="colors">
+            <ul class="line-color">
+                <li class="color1 active"></li>
+                <li class="color2"></li>
+                <li class="color3"></li>
+                <li class="color4"></li>
+                <li class="color5"></li>
+            </ul>
+        </div>
     </div>
 
     <script src="./main.js"></script>

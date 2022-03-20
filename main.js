@@ -3,21 +3,24 @@ let context = canvas.getContext('2d')
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 
-let actions = document.getElementById('actions')
 let eraser = document.getElementById('eraser')
-let brush = document.getElementById('brush')
+let pen = document.getElementById('pen')
+let lineColors = document.querySelector('.line-color').querySelectorAll('li')
+
 // 用户是否在操作
 let using = false
 let eraserEnable = false
 
 eraser.addEventListener('click', () => {
   eraserEnable = true
-  actions.className = 'actions active'
+  eraser.classList.add('active')
+  pen.classList.remove('active')
 })
 
-brush.addEventListener('click', () => {
+pen.addEventListener('click', () => {
   eraserEnable = false
-  actions.className = 'actions'
+  pen.classList.add('active')
+  eraser.classList.remove('active')
 })
 
 // 画画
@@ -27,6 +30,7 @@ let lastPoint = {
 }
 
 listenToUser()
+changeColor()
 
 function listenToUser() {
   if ('ontouchstart' in document) {
@@ -58,7 +62,6 @@ function listenToUser() {
 // 画圆
 function drawCircle(x, y, radius) {
   context.beginPath()
-  context.fillStyle = 'black'
   context.arc(x, y, radius, 0, Math.PI * 2)
   context.closePath()
   context.fill()
@@ -67,7 +70,6 @@ function drawCircle(x, y, radius) {
 // 画线 将上一个点和下一个点通过线连接起来
 function drawLine(x1, y1, x2, y2) {
   context.beginPath()
-  context.strokeStyle = 'black'
   context.lineWidth = 5
   // 笔的位置
   context.moveTo(x1, y1)
@@ -120,6 +122,22 @@ function userMove(e) {
 }
 function userUp() {
   using = false
+}
+
+function changeColor() {
+  lineColors.forEach((item) => {
+    item.addEventListener('click', function () {
+      let color = window.getComputedStyle(this, null)['backgroundColor']
+      this.classList.add('active')
+      context.strokeStyle = color
+      context.fillStyle = color
+      lineColors.forEach((i) => {
+        if (i !== this) {
+          i.classList.remove('active')
+        }
+      })
+    })
+  })
 }
 
 // // 监听浏览器窗口大小的变化
