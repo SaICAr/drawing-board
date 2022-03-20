@@ -118,7 +118,7 @@ function userMove(e) {
     }
   }
 }
-function userUp(e) {
+function userUp() {
   using = false
 }
 
