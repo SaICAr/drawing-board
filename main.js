@@ -82,6 +82,7 @@ function getPosition(e) {
   let y = e.clientY
 
   if ('ontouchstart' in document) {
+    e.preventDefault()
     x = e.touches[0].clientX
     y = e.touches[0].clientY
   }
