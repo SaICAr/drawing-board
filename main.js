@@ -34,6 +34,8 @@ pen.addEventListener('click', () => {
   pen.classList.add('active')
   eraser.classList.remove('active')
   brush.classList.remove('active')
+  document.body.style.cursor = "url('./img/painter.png') 0 32, auto"
+  sizeTool.style.display = 'block'
 })
 
 brush.addEventListener('click', () => {
@@ -41,6 +43,8 @@ brush.addEventListener('click', () => {
   brush.classList.add('active')
   pen.classList.remove('active')
   eraser.classList.remove('active')
+  document.body.style.cursor = "url('./img/brush.png') 0 32, auto"
+  sizeTool.style.display = 'none'
 })
 
 clear.addEventListener('click', () => {

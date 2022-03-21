@@ -1,11 +1,3 @@
-.icon {
-    width: 1em;
-    height: 1em;
-    vertical-align: -0.15em;
-    fill: currentColor;
-    overflow: hidden;
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -20,6 +12,10 @@ body,
 html {
     width: 100%;
     height: 100%;
+}
+
+body {
+    cursor: url("./img/painter.png") 0 32, auto;
 }
 
 .canvas-list {
