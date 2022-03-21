@@ -7,7 +7,7 @@ const canvas2 = document.getElementById('canvas2')
 const context2 = canvas2.getContext('2d')
 canvas2.width = window.innerWidth
 canvas2.height = window.innerHeight
-context2.lineWidth = 10
+context2.lineWidth = 12
 
 const eraser = document.getElementById('eraser')
 const pen = document.getElementById('pen')
@@ -28,7 +28,7 @@ let lineWidth = context2.lineWidth
 let eraserSize = null
 
 eraser.addEventListener('click', () => {
-  eraserSize = 16
+  eraserSize = 32
   eraserEnable = true
   eraser.classList.add('active')
   pen.classList.remove('active')
@@ -49,6 +49,8 @@ pen.addEventListener('click', () => {
   sizeTool.style.display = 'block'
   colorTool.style.display = 'block'
   eraserTool.style.display = 'none'
+  context2.lineWidth = 12
+  changeSizeTool('pen')
 })
 
 brush.addEventListener('click', () => {
@@ -57,10 +59,11 @@ brush.addEventListener('click', () => {
   pen.classList.remove('active')
   eraser.classList.remove('active')
   document.body.style.cursor = "url('./img/brush.png') 0 32, auto"
-  sizeTool.style.display = 'none'
+  sizeTool.style.display = 'block'
   colorTool.style.display = 'block'
   eraserTool.style.display = 'none'
-  context2.lineWidth = 60
+  context2.lineWidth = 20
+  changeSizeTool('brush')
 })
 
 clear.addEventListener('click', () => {
@@ -217,8 +220,12 @@ function changeLineProperty(properties) {
         if (prop.className.slice(0, 4) === 'size') {
           // 改变画笔的宽度
           const size = window.getComputedStyle(this, null)['height']
-          context2.lineWidth = size.slice(0, 2)
+          context2.lineWidth =
+            size.slice(0, 2).slice(-1) === 'p'
+              ? size.slice(0, 1)
+              : size.slice(0, 2)
           lineWidth = context2.lineWidth
+          console.log(lineWidth)
         } else {
           // 改变画笔的颜色
           sizeTool.classList.remove('fade-out')
@@ -240,6 +247,31 @@ function changeLineProperty(properties) {
   })
 }
 
+function changeSizeTool(state) {
+  resetSize()
+  lineSizes.forEach((item, index) => {
+    if (state === 'brush') {
+      item.classList.add('lean')
+      item.style.height = `${index * 2 + 15}px`
+    } else {
+      item.classList.remove('lean')
+      item.style.height = `${index * 3 + 8}px`
+    }
+  })
+}
+
+// 重置画笔大小
+function resetSize() {
+  lineSizes.forEach((item, index) => {
+    if (index === 1) {
+      item.classList.add('active')
+    } else {
+      item.classList.remove('active')
+    }
+  })
+}
+
+// 擦除圆形区域
 function clearArc(x, y, r, context) {
   // (x,y)为要清除的圆的圆心，r为半径，cxt为context
   // 利用的方法是将圆形切成很多个平行的矩形，然后从中间到圆的两端进行逐渐递减的操作

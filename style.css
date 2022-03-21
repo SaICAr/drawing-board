@@ -53,8 +53,8 @@ body {
 
 .tool-options {
     position: fixed;
-    top: 150px;
-    left: 15px;
+    top: 120px;
+    left: 20px;
     user-select: none;
 }
 
@@ -84,6 +84,26 @@ body {
 
 .line-color li:nth-child(5) {
     background-color: lightgreen;
+}
+
+.line-color li:nth-child(6) {
+    background-color: lightgray;
+}
+
+.line-color li:nth-child(7) {
+    background-color: lightpink;
+}
+
+.line-color li:nth-child(8) {
+    background-color: yellow;
+}
+
+.line-color li:nth-child(9) {
+    background-color: saddlebrown;
+}
+
+.line-color li:nth-child(10) {
+    background-color: green;
 }
 
 
@@ -117,19 +137,19 @@ body {
 }
 
 .line-size li:nth-child(1) {
-    height: 10px;
+    height: 8px;
 }
 
 .line-size li:nth-child(2) {
-    height: 15px;
+    height: 11px;
 }
 
 .line-size li:nth-child(3) {
-    height: 20px;
+    height: 14px;
 }
 
 .line-size li:nth-child(4) {
-    height: 25px;
+    height: 17px;
 }
 
 .line-size .active {
@@ -155,4 +175,9 @@ body {
 
 #erasers li {
     padding: 30px 0 30px 25px;
+}
+
+.line-size .lean {
+    border-radius: 0;
+    transform: skew(-25deg);
 }
