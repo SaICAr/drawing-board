@@ -1,14 +1,23 @@
-let canvas = document.getElementById('canvas')
-let context = canvas.getContext('2d')
-canvas.width = window.innerWidth
-canvas.height = window.innerHeight
+let canvas1 = document.getElementById('canvas1')
+let context1 = canvas1.getContext('2d')
+canvas1.width = window.innerWidth
+canvas1.height = window.innerHeight
+
+let canvas2 = document.getElementById('canvas2')
+let context2 = canvas2.getContext('2d')
+canvas2.width = window.innerWidth
+canvas2.height = window.innerHeight
+context2.lineWidth = 15
 
 let eraser = document.getElementById('eraser')
 let pen = document.getElementById('pen')
+let clear = document.getElementById('clear')
+let save = document.getElementById('save')
 let lineColors = document.querySelector('.line-color').querySelectorAll('li')
+let lineSizes = document.querySelector('.line-size').querySelectorAll('li')
 
 // 用户是否在操作
-let using = false
+let isDown = false
 let eraserEnable = false
 
 eraser.addEventListener('click', () => {
@@ -23,60 +32,133 @@ pen.addEventListener('click', () => {
   eraser.classList.remove('active')
 })
 
+clear.addEventListener('click', () => {
+  context2.clearRect(0, 0, canvas2.width, canvas2.height)
+})
+
+save.addEventListener('click', () => {
+  let dataURL = canvas2.toDataURL('image/png')
+  let link = document.createElement('a')
+  link.setAttribute('href', dataURL)
+  link.download = '我的作品'
+  link.click()
+})
+
 // 画画
-let lastPoint = {
+let beginPoint = {
   x: undefined,
   y: undefined
 }
+let points = []
 
 listenToUser()
-changeColor()
+changeLineProperty(lineColors)
+changeLineProperty(lineSizes)
+drawGrid(canvas1, context1, 30, '#ccc', 5)
 
 function listenToUser() {
   if ('ontouchstart' in document) {
-    canvas.addEventListener('touchstart', (e) => {
+    canvas2.addEventListener('touchstart', (e) => {
       userDown(e)
     })
-    canvas.addEventListener('touchmove', (e) => {
+    canvas2.addEventListener('touchmove', (e) => {
       userMove(e)
     })
-    canvas.addEventListener('touchend', (e) => {
+    canvas2.addEventListener('touchend', (e) => {
       userUp(e)
     })
   }
-  canvas.addEventListener('mousedown', (e) => {
+  canvas2.addEventListener('mousedown', (e) => {
     userDown(e)
   })
   // onmousemove 在内部有一个响应时间，如果我们画的太快
   // 那么浏览器mousemove可能还没有触发，那么就会造成断层
   // 通过用线将两点连起来的方式，将断层缝合起来，这样看起来
   // 就不会有断连的感觉
-  canvas.addEventListener('mousemove', (e) => {
+  canvas2.addEventListener('mousemove', (e) => {
     userMove(e)
   })
-  canvas.addEventListener('mouseup', (e) => {
+  canvas2.addEventListener('mouseup', (e) => {
     userUp()
   })
 }
 
-// 画圆
-function drawCircle(x, y, radius) {
-  context.beginPath()
-  context.arc(x, y, radius, 0, Math.PI * 2)
-  context.closePath()
-  context.fill()
+function userDown(e) {
+  isDown = true
+  let { x, y } = getPosition(e)
+  points.push({ x, y })
+
+  if (eraserEnable) {
+    context2.clearRect(x - 5, y - 5, 10, 10)
+  } else {
+    beginPoint = { x, y }
+  }
+}
+function userMove(e) {
+  if (isDown) {
+    const { x, y } = getPosition(e)
+    points.push({ x, y })
+
+    if (eraserEnable) {
+      context2.clearRect(x - 5, y - 5, 10, 10)
+    } else {
+      if (points.length >= 3) {
+        const lastTwoPoints = points.slice(-2)
+        const controlPoint = lastTwoPoints[0]
+        const endPoint = {
+          x: (lastTwoPoints[0].x + lastTwoPoints[1].x) / 2,
+          y: (lastTwoPoints[0].y + lastTwoPoints[1].y) / 2
+        }
+        drawLine(beginPoint, controlPoint, endPoint)
+        beginPoint = endPoint
+      }
+    }
+  }
+}
+function userUp() {
+  isDown = false
 }
 
-// 画线 将上一个点和下一个点通过线连接起来
-function drawLine(x1, y1, x2, y2) {
-  context.beginPath()
-  context.lineWidth = 5
+// 画线
+function drawLine(beginPoint, controlPoint, endPoint) {
+  context2.lineJoin = 'round'
+  context2.lineCap = 'round'
+  context2.beginPath()
   // 笔的位置
-  context.moveTo(x1, y1)
-  // 往哪里画线
-  context.lineTo(x2, y2)
-  context.closePath()
-  context.stroke()
+  context2.moveTo(beginPoint.x, beginPoint.y)
+  // 利用二次贝塞尔曲线让线更加圆滑
+  context2.quadraticCurveTo(
+    controlPoint.x,
+    controlPoint.y,
+    endPoint.x,
+    endPoint.y
+  )
+  context2.stroke()
+  context2.closePath()
+}
+// 画网格
+function drawGrid(canvas, context, girdSize, girdColor, girdDensity) {
+  const xLines = Math.floor(canvas.width / girdSize) + 1
+  const yLines = Math.floor(canvas.height / girdSize) + 1
+  context.strokeStyle = girdColor
+  context.setLineDash([girdDensity])
+  // XLine
+  for (let i = 0; i < yLines; i++) {
+    context.beginPath()
+    context.moveTo(0, i * girdSize)
+    context.lineTo(canvas.width, i * girdSize)
+    context.stroke()
+    context.closePath()
+  }
+
+  // yLine
+  for (let i = 0; i < xLines; i++) {
+    context.beginPath()
+    context.moveTo(i * girdSize, 0)
+    context.lineTo(i * girdSize, canvas.height)
+    context.stroke()
+    context.closePath()
+  }
 }
 
 function getPosition(e) {
@@ -91,49 +173,26 @@ function getPosition(e) {
   return { x, y }
 }
 
-function userDown(e) {
-  using = true
-  let { x, y } = getPosition(e)
-  if (eraserEnable) {
-    context.clearRect(x - 5, y - 5, 10, 10)
-  } else {
-    lastPoint = {
-      x,
-      y
-    }
-    drawCircle(x, y, 2)
-  }
-}
-function userMove(e) {
-  if (using) {
-    let { x, y } = getPosition(e)
-    if (eraserEnable) {
-      context.clearRect(x - 5, y - 5, 10, 10)
-    } else {
-      let newPoint = {
-        x,
-        y
+function changeLineProperty(properties) {
+  properties.forEach((prop) => {
+    prop.addEventListener('click', function () {
+      if (prop.className.slice(0, 4) === 'size') {
+        // 改变画笔的宽度
+        const size = window.getComputedStyle(this, null)['height']
+        context2.lineWidth = size.slice(0, 2)
+      } else {
+        // 改变画笔的颜色
+        const color = window.getComputedStyle(this, null)['backgroundColor']
+        context2.strokeStyle = color
+        context2.fillStyle = color
+        lineSizes.forEach((item) => {
+          item.style.backgroundColor = color
+        })
       }
-      drawCircle(x, y, 2)
-      drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y)
-      lastPoint = newPoint
-    }
-  }
-}
-function userUp() {
-  using = false
-}
-
-function changeColor() {
-  lineColors.forEach((item) => {
-    item.addEventListener('click', function () {
-      let color = window.getComputedStyle(this, null)['backgroundColor']
       this.classList.add('active')
-      context.strokeStyle = color
-      context.fillStyle = color
-      lineColors.forEach((i) => {
-        if (i !== this) {
-          i.classList.remove('active')
+      properties.forEach((item) => {
+        if (item !== this) {
+          item.classList.remove('active')
         }
       })
     })
@@ -149,8 +208,8 @@ function changeColor() {
 
 // // 当窗口发送变化时，将旧画布的内容暂存下来，放到新画布上显示
 // function resize(w, h) {
-//   let imgData = context.getImageData(0, 0, canvas.width, canvas.height)
-//   canvas.width = w
-//   canvas.height = h
-//   context.putImageData(imgData, 0, 0)
+//   let imgData = context2.getImageData(0, 0, canvas2.width, canvas2.height)
+//   canvas2.width = w
+//   canvas2.height = h
+//   context2.putImageData(imgData, 0, 0)
 // }

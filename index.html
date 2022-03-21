@@ -7,26 +7,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>我的画板</title>
     <link rel="stylesheet" href="./style.css">
-    <script src="//at.alicdn.com/t/font_3262434_5a5ytm3mymi.js"></script>
+    <script src="//at.alicdn.com/t/font_3262434_gkpxswfp9s6.js"></script>
 </head>
 
 <body>
     <div class="canvas-list">
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas1"></canvas>
+        <canvas id="canvas2"></canvas>
     </div>
     <div class="tools">
-        <div class="pen">
-            <svg class="icon active" id="pen">
-                <use xlink:href="#icon-pen"></use>
-            </svg>
+        <div class="pen active" id="pen">
+            <img src="./img/pen.svg" alt="" title="画笔">
         </div>
-        <div class="eraser">
-            <svg class="icon" id="eraser">
-                <use xlink:href="#icon-eraser"></use>
-            </svg>
+        <div class="eraser" id="eraser">
+            <img src="./img/eraser.svg" alt="" title="橡皮擦">
         </div>
-        <div class="clear"></div>
-        <div class="save"></div>
+        <div class="clear" id="clear">
+            <img src="./img/brush.svg" alt="" title="清空画布">
+        </div>
+        <div class="save" id="save">
+            <img src="./img/picture.svg" alt="" title="保存">
+        </div>
     </div>
     <div class="tool-options">
         <div class="colors">
@@ -36,6 +37,14 @@
                 <li class="color3"></li>
                 <li class="color4"></li>
                 <li class="color5"></li>
+            </ul>
+        </div>
+        <div class="sizes">
+            <ul class="line-size">
+                <li class="size1"></li>
+                <li class="size2 active"></li>
+                <li class="size3"></li>
+                <li class="size4"></li>
             </ul>
         </div>
     </div>
