@@ -37,7 +37,7 @@ html {
     position: relative;
     top: 0;
     left: 0;
-    width: 300px;
+    width: 370px;
     margin: 0 auto;
     user-select: none;
 }
@@ -102,6 +102,13 @@ html {
     position: absolute;
     top: 0px;
     left: 60px;
+    transition: all 1s;
+}
+
+.fade-out {
+    transform-origin: left;
+    transform: translate(-20px, 20px);
+    opacity: 0;
 }
 
 

@@ -1,20 +1,22 @@
-let canvas1 = document.getElementById('canvas1')
-let context1 = canvas1.getContext('2d')
+const canvas1 = document.getElementById('canvas1')
+const context1 = canvas1.getContext('2d')
 canvas1.width = window.innerWidth
 canvas1.height = window.innerHeight
 
-let canvas2 = document.getElementById('canvas2')
-let context2 = canvas2.getContext('2d')
+const canvas2 = document.getElementById('canvas2')
+const context2 = canvas2.getContext('2d')
 canvas2.width = window.innerWidth
 canvas2.height = window.innerHeight
 context2.lineWidth = 15
 
-let eraser = document.getElementById('eraser')
-let pen = document.getElementById('pen')
-let clear = document.getElementById('clear')
-let save = document.getElementById('save')
-let lineColors = document.querySelector('.line-color').querySelectorAll('li')
-let lineSizes = document.querySelector('.line-size').querySelectorAll('li')
+const eraser = document.getElementById('eraser')
+const pen = document.getElementById('pen')
+const brush = document.getElementById('brush')
+const clear = document.getElementById('clear')
+const save = document.getElementById('save')
+const sizeTool = document.getElementById('sizes')
+const lineColors = document.querySelector('.line-color').querySelectorAll('li')
+const lineSizes = document.querySelector('.line-size').querySelectorAll('li')
 
 // 用户是否在操作
 let isDown = false
@@ -24,11 +26,20 @@ eraser.addEventListener('click', () => {
   eraserEnable = true
   eraser.classList.add('active')
   pen.classList.remove('active')
+  brush.classList.remove('active')
 })
 
 pen.addEventListener('click', () => {
   eraserEnable = false
   pen.classList.add('active')
+  eraser.classList.remove('active')
+  brush.classList.remove('active')
+})
+
+brush.addEventListener('click', () => {
+  eraserEnable = false
+  brush.classList.add('active')
+  pen.classList.remove('active')
   eraser.classList.remove('active')
 })
 
@@ -84,6 +95,7 @@ function listenToUser() {
 }
 
 function userDown(e) {
+  sizeTool.classList.add('fade-out')
   isDown = true
   let { x, y } = getPosition(e)
   points.push({ x, y })
@@ -182,6 +194,7 @@ function changeLineProperty(properties) {
         context2.lineWidth = size.slice(0, 2)
       } else {
         // 改变画笔的颜色
+        sizeTool.classList.remove('fade-out')
         const color = window.getComputedStyle(this, null)['backgroundColor']
         context2.strokeStyle = color
         context2.fillStyle = color
