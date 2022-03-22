@@ -29,13 +29,23 @@ body {
 }
 
 /* ********************** */
+
+
+
 .tools {
     position: relative;
     top: 0;
     left: 0;
-    width: 370px;
+    width: 450px;
+    height: 90px;
     margin: 0 auto;
     user-select: none;
+}
+
+.scroll {
+    overflow-y: hidden;
+    overflow-x: scroll;
+    white-space: nowrap;
 }
 
 .tools div {
@@ -137,19 +147,19 @@ body {
 }
 
 .line-size li:nth-child(1) {
-    height: 8px;
+    height: 5px;
 }
 
 .line-size li:nth-child(2) {
-    height: 11px;
+    height: 7px;
 }
 
 .line-size li:nth-child(3) {
-    height: 14px;
+    height: 9px;
 }
 
 .line-size li:nth-child(4) {
-    height: 17px;
+    height: 11px;
 }
 
 .line-size .active {

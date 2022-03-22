@@ -7,25 +7,70 @@ const canvas2 = document.getElementById('canvas2')
 const context2 = canvas2.getContext('2d')
 canvas2.width = window.innerWidth
 canvas2.height = window.innerHeight
-context2.lineWidth = 12
+context2.lineWidth = 7
 
 const eraser = document.getElementById('eraser')
 const pen = document.getElementById('pen')
 const brush = document.getElementById('brush')
 const clear = document.getElementById('clear')
 const save = document.getElementById('save')
+const gird = document.getElementById('gird')
 const colorTool = document.getElementById('colors')
 const sizeTool = document.getElementById('sizes')
 const eraserTool = document.getElementById('erasers')
+const tools = document.getElementById('tools')
 const lineColors = document.querySelector('.line-color').querySelectorAll('li')
 const lineSizes = document.querySelector('.line-size').querySelectorAll('li')
 const erasers = document.querySelector('.eraser-list').querySelectorAll('li')
+
+;(function () {
+  if (window.innerWidth < 500) {
+    tools.style.width = '300px'
+    tools.classList.add('scroll')
+  } else {
+    tools.style.width = '450px'
+    tools.classList.remove('scroll')
+  }
+})()
 
 // 用户是否在操作
 let isDown = false
 let eraserEnable = false
 let lineWidth = context2.lineWidth
 let eraserSize = null
+
+// 画画
+let beginPoint = {
+  x: undefined,
+  y: undefined
+}
+let points = []
+
+let bgcNum = 1
+
+listenToUser()
+changeLineProperty(lineColors)
+changeLineProperty(lineSizes)
+changeLineProperty(erasers)
+drawGrid(canvas1, context1, 30, '#ccc', [5])
+
+gird.addEventListener('click', () => {
+  switch (bgcNum) {
+    case 0:
+      gird.childNodes[1].setAttribute('src', './img/solid.svg')
+      drawGrid(canvas1, context1, 30, '#ccc', [5])
+      break
+    case 1:
+      gird.childNodes[1].setAttribute('src', './img/empty.svg')
+
+      drawGrid(canvas1, context1, 30, '#ccc')
+      break
+    case 2:
+      gird.childNodes[1].setAttribute('src', './img/dotted.svg')
+      context1.clearRect(0, 0, canvas1.width, canvas1.height)
+  }
+  bgcNum >= 2 ? (bgcNum = 0) : bgcNum++
+})
 
 eraser.addEventListener('click', () => {
   eraserSize = 32
@@ -45,11 +90,12 @@ pen.addEventListener('click', () => {
   pen.classList.add('active')
   eraser.classList.remove('active')
   brush.classList.remove('active')
+  sizeTool.classList.remove('fade-out')
   document.body.style.cursor = "url('./img/painter.png') 0 32, auto"
   sizeTool.style.display = 'block'
   colorTool.style.display = 'block'
   eraserTool.style.display = 'none'
-  context2.lineWidth = 12
+  context2.lineWidth = 7
   changeSizeTool('pen')
 })
 
@@ -58,11 +104,12 @@ brush.addEventListener('click', () => {
   brush.classList.add('active')
   pen.classList.remove('active')
   eraser.classList.remove('active')
+  sizeTool.classList.remove('fade-out')
   document.body.style.cursor = "url('./img/brush.png') 0 32, auto"
   sizeTool.style.display = 'block'
   colorTool.style.display = 'block'
   eraserTool.style.display = 'none'
-  context2.lineWidth = 20
+  context2.lineWidth = 15
   changeSizeTool('brush')
 })
 
@@ -78,19 +125,6 @@ save.addEventListener('click', () => {
   link.download = '我的作品'
   link.click()
 })
-
-// 画画
-let beginPoint = {
-  x: undefined,
-  y: undefined
-}
-let points = []
-
-listenToUser()
-changeLineProperty(lineColors)
-changeLineProperty(lineSizes)
-changeLineProperty(erasers)
-drawGrid(canvas1, context1, 30, '#ccc', 5)
 
 function listenToUser() {
   if ('ontouchstart' in document) {
@@ -171,12 +205,16 @@ function drawLine(beginPoint, controlPoint, endPoint) {
   context2.stroke()
   context2.closePath()
 }
+
 // 画网格
-function drawGrid(canvas, context, girdSize, girdColor, girdDensity) {
+function drawGrid(canvas, context, girdSize, girdColor, girdDensity = []) {
   const xLines = Math.floor(canvas.width / girdSize) + 1
   const yLines = Math.floor(canvas.height / girdSize) + 1
   context.strokeStyle = girdColor
-  context.setLineDash([girdDensity])
+  if (!girdDensity.length) {
+    context.clearRect(0, 0, canvas.width, canvas.height)
+  }
+  context.setLineDash(girdDensity)
   // XLine
   for (let i = 0; i < yLines; i++) {
     context.beginPath()
@@ -255,7 +293,7 @@ function changeSizeTool(state) {
       item.style.height = `${index * 2 + 15}px`
     } else {
       item.classList.remove('lean')
-      item.style.height = `${index * 3 + 8}px`
+      item.style.height = `${index * 2 + 5}px`
     }
   })
 }
