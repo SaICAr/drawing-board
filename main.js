@@ -18,20 +18,10 @@ const gird = document.getElementById('gird')
 const colorTool = document.getElementById('colors')
 const sizeTool = document.getElementById('sizes')
 const eraserTool = document.getElementById('erasers')
-const tools = document.getElementById('tools')
 const lineColors = document.querySelector('.line-color').querySelectorAll('li')
 const lineSizes = document.querySelector('.line-size').querySelectorAll('li')
 const erasers = document.querySelector('.eraser-list').querySelectorAll('li')
 
-;(function () {
-  if (window.innerWidth < 500) {
-    tools.style.width = '300px'
-    tools.classList.add('scroll')
-  } else {
-    tools.style.width = '450px'
-    tools.classList.remove('scroll')
-  }
-})()
 
 // 用户是否在操作
 let isDown = false
@@ -144,7 +134,7 @@ function listenToUser() {
   canvas2.addEventListener('mousemove', (e) => {
     userMove(e)
   })
-  canvas2.addEventListener('mouseup', (e) => {
+  canvas2.addEventListener('mouseup', () => {
     userUp()
   })
 }
@@ -248,7 +238,7 @@ function getPosition(e) {
 
 function changeLineProperty(properties) {
   properties.forEach((prop) => {
-    prop.addEventListener('click', function (e) {
+    prop.addEventListener('click', function () {
       if (prop.className.slice(0, 6) === 'eraser') {
         eraserSize = this.className.slice(6, 8)
         document.body.style.cursor = `url('./img/eraser${eraserSize}.ico') ${
@@ -317,14 +307,14 @@ function clearArc(x, y, r, context) {
   clearArc(x, y, r)
 
   function clearArc(x, y, radius) {
-    var calcWidth = radius - stepClear
-    var calcHeight = Math.sqrt(radius * radius - calcWidth * calcWidth)
+    const calcWidth = radius - stepClear
+    const calcHeight = Math.sqrt(radius * radius - calcWidth * calcWidth)
 
-    var posX = x - calcWidth
-    var posY = y - calcHeight
+    const posX = x - calcWidth
+    const posY = y - calcHeight
 
-    var widthX = 2 * calcWidth
-    var heightY = 2 * calcHeight
+    const widthX = 2 * calcWidth
+    const heightY = 2 * calcHeight
 
     if (stepClear <= radius) {
       context.clearRect(posX, posY, widthX, heightY)
