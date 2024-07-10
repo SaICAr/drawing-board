@@ -1,3 +1,4 @@
-# canvas-demo
+# drawing-board
 基于canvas做的一个小画板demo
-预览：https://xineryo.github.io/canvas-demo/
+
+<br>预览：https://xineryo.github.io/canvas-demo/
